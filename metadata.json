@@ -1,0 +1,15 @@
+{
+  "name": "ttarczynski-sensu_check_wrapper",
+  "version": "0.1.0",
+  "author": "Tomasz Tarczynski",
+  "summary": "Wrapper for sensu::check with hiera lookups",
+  "license": "Apache-2.0",
+  "source": "https://github.com/ttarczynski/sensu_check_wrapper",
+  "project_page": "https://github.com/ttarczynski/sensu_check_wrapper",
+  "issues_url": "https://github.com/ttarczynski/sensu_check_wrapper/issues",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"},
+    {"name":"sensu-sensu","version_requirement":">= 2.2.0"}
+  ]
+}
+
