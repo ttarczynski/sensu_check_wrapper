@@ -7,9 +7,10 @@
   "source": "https://github.com/ttarczynski/sensu_check_wrapper",
   "project_page": "https://github.com/ttarczynski/sensu_check_wrapper",
   "issues_url": "https://github.com/ttarczynski/sensu_check_wrapper/issues",
+  "tags": [ "sensu" ],
   "dependencies": [
-    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"},
-    {"name":"sensu-sensu","version_requirement":">= 2.2.0"}
+    {"name":"puppetlabs-stdlib","version_requirement":">=3.2.0 <5.0.0"},
+    {"name":"sensu-sensu","version_requirement":">= 2.2.0 <3.0.0"}
   ]
 }
 
