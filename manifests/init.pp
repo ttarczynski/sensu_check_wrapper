@@ -62,91 +62,67 @@
 
 # lint:ignore:undef_in_function
 define sensu_check_wrapper (
-  $command,
-  $runbook,
-  $ensure        = 'present',
-  $group         = undef,
-  $check_every   = pick(
+  Regexp['^[\w\.-]+$'] $_name = $name,
+  String $command,
+  Regexp['^https?://'] $runbook,
+  Enum['present', 'absent'] $ensure = 'present',
+  Optional[Regexp['^[\w\.-]+$']] $group = undef,
+  String $check_every = pick(
     hiera("sensu_check_wrapper::check_every::${title}", undef),
     hiera("sensu_check_wrapper::check_every::group::${group}", undef),
     hiera('sensu_check_wrapper::check_every', undef),
     '1m'
   ),
-  $handlers      = pick(
+  Array $handlers = pick(
     hiera("sensu_check_wrapper::handlers::${title}", undef),
     hiera("sensu_check_wrapper::handlers::group::${group}", undef),
     hiera('sensu_check_wrapper::handlers', undef),
     []
   ),
-  $occurrences   = pick(
+  Integer $occurrences = pick(
     hiera("sensu_check_wrapper::occurrences::${title}", undef),
     hiera("sensu_check_wrapper::occurrences::group::${group}", undef),
     hiera('sensu_check_wrapper::occurrences', undef),
     1
   ),
-  $subdue        = pick(
+  Variant[Hash, Enum['absent']] $subdue = pick(
     hiera("sensu_check_wrapper::subdue::${title}", undef),
     hiera("sensu_check_wrapper::subdue::group::${group}", undef),
     hiera('sensu_check_wrapper::subdue', undef),
     'absent'
   ),
-  $refresh_every = pick(
+  String $refresh_every = pick(
     hiera("sensu_check_wrapper::refresh_every::${title}", undef),
     hiera("sensu_check_wrapper::refresh_every::group::${group}", undef),
     hiera('sensu_check_wrapper::refresh_every', undef),
     '30m'
   ),
-  $alert         = pick(
+  Boolean $alert = pick(
     hiera("sensu_check_wrapper::alert::${title}", undef),
     hiera("sensu_check_wrapper::alert::group::${group}", undef),
     hiera('sensu_check_wrapper::alert', undef),
     true
   ),
-  $aggregate     = pick(
+  Boolean $aggregate = pick(
     hiera("sensu_check_wrapper::aggregate::${title}", undef),
     hiera("sensu_check_wrapper::aggregate::group::${group}", undef),
     hiera('sensu_check_wrapper::aggregate', undef),
     false
   ),
-  $handle     = pick(
+  Boolean $handle = pick(
     hiera("sensu_check_wrapper::handle::${title}", undef),
     hiera("sensu_check_wrapper::handle::group::${group}", undef),
     hiera('sensu_check_wrapper::handle', undef),
     true
   ),
-  $uchiwa_prefix = hiera('sensu_check_wrapper::uchiwa_prefix', undef),
+  Optional[Regexp['^https?://']] $uchiwa_prefix = hiera('sensu_check_wrapper::uchiwa_prefix', undef),
 ) {
 # lint:endignore
 
-  # Catch RE errors before they stop sensu:
-  validate_re($name, '^[\w\.-]+$', "Your sensu check name has special chars sensu won't like: ${name}")
-  validate_re($ensure, '^present$|^absent$', "Ensure can only be 'present' or 'absent'. You've used: '${ensure}'")
-  validate_re($runbook, '^https?://')
-  if $uchiwa_prefix != undef {
-    validate_re($uchiwa_prefix, '^https?://')
-  }
-
-  validate_string($command)
-  validate_array($handlers)
-  validate_integer($occurrences)
-  validate_bool($alert)
-  validate_bool($handle)
-  if $aggregate {
-    validate_string($aggregate)
-  }
-  if $subdue != undef and $subdue != 'absent' {
-    validate_hash($subdue)
-  }
-  if $group != undef {
-    validate_re($group, '^[\w\.-]+$', "Your check group name has forbiden special chars: ${group}")
-  }
-
   $interval_s = human_time_to_seconds($check_every)
   $refresh_s = human_time_to_seconds($refresh_every)
-  validate_re($interval_s, '^\d+$')
-  validate_re($refresh_s, '^\d+$')
 
-  $uchiwa = "${uchiwa_prefix}${::fqdn}?check=${name}"
+  $uchiwa = "${uchiwa_prefix}${::fqdn}?check=${_name}"
 
   $_aggregate = $aggregate ? {
     false   => undef,
@@ -180,7 +156,7 @@ define sensu_check_wrapper (
     custom      => $custom,
   }
 
-  # quotes around $name are needed to ensure its value comes from sensu_check_wrapper
-  create_resources('::sensu::check', { "${name}" => $sensu_check_params })
+  # quotes around $_name are needed to ensure its value comes from sensu_check_wrapper
+  create_resources('::sensu::check', { "${_name}" => $sensu_check_params })
 
 }
