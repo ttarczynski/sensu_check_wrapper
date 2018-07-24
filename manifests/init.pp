@@ -146,11 +146,11 @@ define sensu_check_wrapper (
   $sensu_check_params = {
     command     => $command,
     ensure      => $ensure,
-    interval    => $interval_s,
+    interval    => 0 + $interval_s,
     handlers    => $handlers,
     occurrences => $occurrences,
     subdue      => $subdue,
-    refresh     => $refresh_s,
+    refresh     => 0 + $refresh_s,
     aggregate   => $_aggregate,
     handle      => $_handle,
     custom      => $custom,
