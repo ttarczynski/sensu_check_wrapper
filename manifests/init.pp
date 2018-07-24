@@ -62,11 +62,11 @@
 
 # lint:ignore:undef_in_function
 define sensu_check_wrapper (
-  Regexp['^[\w\.-]+$'] $_name = $name,
+  Pattern['^[\w\.-]+$'] $_name = $name,
   String $command,
-  Regexp['^https?://'] $runbook,
+  Pattern['^https?://'] $runbook,
   Enum['present', 'absent'] $ensure = 'present',
-  Optional[Regexp['^[\w\.-]+$']] $group = undef,
+  Optional[Pattern['^[\w\.-]+$']] $group = undef,
   String $check_every = pick(
     hiera("sensu_check_wrapper::check_every::${title}", undef),
     hiera("sensu_check_wrapper::check_every::group::${group}", undef),
@@ -115,7 +115,7 @@ define sensu_check_wrapper (
     hiera('sensu_check_wrapper::handle', undef),
     true
   ),
-  Optional[Regexp['^https?://']] $uchiwa_prefix = hiera('sensu_check_wrapper::uchiwa_prefix', undef),
+  Optional[Pattern['^https?://']] $uchiwa_prefix = hiera('sensu_check_wrapper::uchiwa_prefix', undef),
 ) {
 # lint:endignore
 
