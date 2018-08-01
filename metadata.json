@@ -1,6 +1,6 @@
 {
   "name": "ttarczynski-sensu_check_wrapper",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Tomasz Tarczynski",
   "summary": "Wrapper for sensu::check with hiera lookups",
   "license": "Apache-2.0",
